@@ -20,7 +20,8 @@ def newEmployee(request):
         image_url = request.data['image_url']
         employee = EmployeeDetails(official_email=official_email, personal_email=personal_email,
                                    employee_id=employee_id, p_address=p_address, c_address=c_address)
-        user = User(official_email_id=official_email,name=name, image_url=image_url)
+        user = User(official_email_id=official_email,
+                    name=name, image_url=image_url)
 
         employee.save()
         user.save()
