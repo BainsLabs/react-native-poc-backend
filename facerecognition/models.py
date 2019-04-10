@@ -10,7 +10,12 @@ class User(models.Model):
         'employee.EmployeeDetails', to_field='official_email', on_delete=models.CASCADE)
     image_url = models.URLField(max_length=200, null=False, blank=False)
     is_superuser = models.BooleanField(default=False)
+    password = models.CharField(max_length=100,null=True, blank=True)
     USERNAME_FIELD = 'email'
 
     def __str__(self):
         return self.official_email
+    @property
+    def to_json(self):
+        return {"official_email_id":self.official_email_id, "image_url":self.image_url}
+
