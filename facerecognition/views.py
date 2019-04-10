@@ -13,18 +13,20 @@ from facerecognition.models import User
 
 
 @api_view(["GET", "POST"])
-
-
 def newuser(request):
-    official_email = request.data['official_email']
-    name = request.data['name']
-    image_url = request.data['image_url']
-    user = User(official_email=official_email, name=name,image_url=image_url)
-    user.save()
+    try:
+        official_email = request.data['official_email']
+        name = request.data['name']
+        image_url = request.data['image_url']
+        user = User(official_email=official_email,
+                    name=name, image_url=image_url)
+        user.save()
+        return Response(status=status.HTTP_200_OK, data={"message": "user created"})
+    except Exception as e:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "bad request"})
 
 
-
-
+@api_view(["GET", "POST"])
 def index(request):
     try:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

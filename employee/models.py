@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 
 
-class Employee(models.Model):
-    official_email = models.ForeignKey(
-        'facerecognition.User', to_field='official_email', on_delete=models.CASCADE)
+class EmployeeDetails(models.Model):
+    official_email = models.EmailField(
+        ('email address'), unique=True, blank=False)
     personal_email = models.EmailField(
         ('email address'), unique=True, blank=False)
     employee_id = models.CharField(max_length=100, null=False, blank=False)
