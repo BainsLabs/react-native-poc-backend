@@ -7,11 +7,24 @@ from PIL import Image
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from facerecognition.models import User
 
 # Create your views here.
 
 
 @api_view(["GET", "POST"])
+
+
+def newuser(request):
+    official_email = request.data['official_email']
+    name = request.data['name']
+    image_url = request.data['image_url']
+    user = User(official_email=official_email, name=name,image_url=image_url)
+    user.save()
+
+
+
+
 def index(request):
     try:
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
