@@ -18,7 +18,7 @@ import json
 
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def index(request):
     try:
         user = User.objects.get(official_email_id=request.data['email'])
@@ -61,3 +61,5 @@ def index(request):
     except Exception as e:
         print(e)
         return Response(data={"message": "not found"}, status=status.HTTP_404_NOT_FOUND)
+
+

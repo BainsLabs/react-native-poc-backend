@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'facerecognition.apps.FacerecognitionConfig',
     'employee.apps.EmployeeConfig',
+    'faceappadmin.apps.FaceappadminConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

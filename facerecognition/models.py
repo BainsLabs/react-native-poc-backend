@@ -9,6 +9,7 @@ class User(models.Model):
     official_email = models. ForeignKey(
         'employee.EmployeeDetails', to_field='official_email', on_delete=models.CASCADE)
     image_url = models.URLField(max_length=200, null=False, blank=False)
+    is_superuser = models.BooleanField(default=False)
     USERNAME_FIELD = 'email'
 
     def __str__(self):

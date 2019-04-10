@@ -16,3 +16,7 @@ class EmployeeDetails(models.Model):
 
     def __str__(self):
         return self.official_email
+
+    @property
+    def to_json(self):
+       return {"official_email":self.official_email, "personal_email":self.personal_email, "employee_id":self.employee_id,"p_address":self.p_address, "c_address":self.c_address }
