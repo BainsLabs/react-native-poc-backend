@@ -7,34 +7,28 @@ from PIL import Image
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import urllib.request
+from skimage import io
+from rest_framework.parsers import JSONParser
 from facerecognition.models import User
+import json
 
 # Create your views here.
 
 
-@api_view(["GET", "POST"])
-def newuser(request):
-    try:
-        official_email = request.data['official_email']
-        name = request.data['name']
-        image_url = request.data['image_url']
-        user = User(official_email=official_email,
-                    name=name, image_url=image_url)
-        user.save()
-        return Response(status=status.HTTP_200_OK, data={"message": "user created"})
-    except Exception as e:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": "bad request"})
 
 
-@api_view(["GET", "POST"])
+@api_view(["GET"])
 def index(request):
     try:
+        user = User.objects.get(official_email_id=request.data['email'])
+
         BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         MEDIA_ROOT = os.path.join(BASE_DIR, 'facerecognition')
         # images = os.listdir('')
         # make a list of all the available images
-        images = MEDIA_ROOT + "/karan.jpg"
 
+        images =io.imread("http://www.images.behindwoods.com/photo-galleries-q1-09/tamil-photo-gallery/karan/karan-16.jpg")
         cam = cv2.VideoCapture(0)   # 0 -> index of camera
         s, img = cam.read()
         if s:    # frame captured without any errors
@@ -51,7 +45,7 @@ def index(request):
         image_to_be_matched_encoded = face_recognition.face_encodings(
             image_to_be_matched)[0]
 
-        current_image = face_recognition.load_image_file(images)
+        current_image = images
         # encode the loaded image into a feature vector
         current_image_encoded = face_recognition.face_encodings(current_image)[
             0]
@@ -65,4 +59,5 @@ def index(request):
             return Response(data={"status": 400})
 
     except Exception as e:
+        print(e)
         return Response(data={"message": "not found"}, status=status.HTTP_404_NOT_FOUND)
