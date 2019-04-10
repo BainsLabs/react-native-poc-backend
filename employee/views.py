@@ -26,7 +26,14 @@ def newEmployee(request):
     # employee = request.data.get()
 
     # Create an article from the above data
-    serializer = EmployeeSerializers(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        employee_save = serializer.save()
-        return Response({"success": "Employee '{}' created successfully".format(employee_save)})
+    official_email = request.data['official_email_id']
+    personal_email = request.data['personal_email']
+    employee_id = request.data['employee_id']
+    p_address = request.data['p_address']
+    c_address = request.data['c_address']
+    employee = Employee(official_email_id=official_email, personal_email=personal_email,
+                        employee_id=employee_id, p_address=p_address, c_address=c_address)
+    employee.save()
+#     if serializer.is_valid(raise_exception=True):
+#         employee_save = serializer.save()
+#         return Response({"success": "Employee '{}' created successfully".format(employee_save)})
