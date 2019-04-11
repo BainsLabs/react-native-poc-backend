@@ -1,6 +1,7 @@
 
 from rest_framework import status
 from rest_framework.response import Response
+from django.contrib.auth.hashers import make_password
 from rest_framework.decorators import api_view
 from employee.models import EmployeeDetails
 from facerecognition.models import User
@@ -30,7 +31,8 @@ def adminLogin(request):
                 "email": user.official_email_id,
                 "isAdmin": user.is_superuser
             }
-            print(user.official_email_id)
+            hashed_email = make_password(user.official_email_id, salt=None)
+            print(hashed_email)
         return Response(userObject, status=status.HTTP_200_OK)
     except Exception as e:
         return Response(data={"message": "You are not registered with us! :("}, status=status.HTTP_400_BAD_REQUEST)
