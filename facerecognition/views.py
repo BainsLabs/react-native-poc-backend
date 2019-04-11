@@ -12,10 +12,10 @@ from skimage import io
 from rest_framework.parsers import JSONParser
 from facerecognition.models import User
 import json
+import io
+import base64
 
 # Create your views here.
-
-
 
 
 @api_view(["POST"])
@@ -28,7 +28,7 @@ def index(request):
         # images = os.listdir('')
         # make a list of all the available images
 
-        images =io.imread("http://www.images.behindwoods.com/photo-galleries-q1-09/tamil-photo-gallery/karan/karan-16.jpg")
+        images = io.imread(user.image_url)
         cam = cv2.VideoCapture(0)   # 0 -> index of camera
         s, img = cam.read()
         if s:    # frame captured without any errors
@@ -39,11 +39,13 @@ def index(request):
             cv2.imwrite("filename.jpg", img)
 
         # load your image
-        image_to_be_matched = face_recognition.load_image_file("filename.jpg")
+        image = face_recognition.load_image_file(
+            io.BytesIO(base64.b64decode(request.data["img_base"])))
+
+        # image_to_be_matched = face_recognition.load_image_file("filename.jpg")
 
         # encoded the loaded image into a feature vector
-        image_to_be_matched_encoded = face_recognition.face_encodings(
-            image_to_be_matched)[0]
+        image_to_be_matched_encoded = face_recognition.face_encodings(image)
 
         current_image = images
         # encode the loaded image into a feature vector
@@ -61,5 +63,3 @@ def index(request):
     except Exception as e:
         print(e)
         return Response(data={"message": "not found"}, status=status.HTTP_404_NOT_FOUND)
-
-

@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from employee.models import EmployeeDetails
 from facerecognition.models import User
 from utils.imageUpload import imageUpload
+
 # Create your views here.
 
 
