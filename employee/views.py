@@ -11,7 +11,6 @@ from utils.imageUpload import imageUpload
 
 @api_view(["GET", "POST"])
 def newEmployee(request):
-
     try:
         official_email = request.data['official_email']
         personal_email = request.data['personal_email']
