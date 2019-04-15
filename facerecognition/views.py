@@ -8,11 +8,11 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 import urllib.request
-from skimage import io
+import io
+import skimage
 from rest_framework.parsers import JSONParser
 from facerecognition.models import User
 import json
-import io
 import base64
 
 # Create your views here.
@@ -28,7 +28,8 @@ def index(request):
         # images = os.listdir('')
         # make a list of all the available images
 
-        images = io.imread(user.image_url)
+        images = skimage.io.imread(user.image_url)
+        # print("ima", images)
         cam = cv2.VideoCapture(0)   # 0 -> index of camera
         s, img = cam.read()
         if s:    # frame captured without any errors
@@ -39,10 +40,10 @@ def index(request):
             cv2.imwrite("filename.jpg", img)
 
         # load your image
-        image = face_recognition.load_image_file(
-            io.BytesIO(base64.b64decode(request.data["img_base"])))
+        # image = face_recognition.load_image_file(
+        #     io.BytesIO(base64.b64decode(request.data["img_base"])))
 
-        # image_to_be_matched = face_recognition.load_image_file("filename.jpg")
+        image = face_recognition.load_image_file("filename.jpg")
 
         # encoded the loaded image into a feature vector
         image_to_be_matched_encoded = face_recognition.face_encodings(image)
@@ -52,13 +53,18 @@ def index(request):
         current_image_encoded = face_recognition.face_encodings(current_image)[
             0]
     # match your image with the image and check if it matches
+        # print("texst1")
         result = face_recognition.compare_faces(
             [image_to_be_matched_encoded], current_image_encoded)
     # check if it was a match
-        if result[0] == True:
+        print("texst2", result)
+        result = np.array(result)
+        if result.any():
             return Response(data={"status": 200})
         else:
             return Response(data={"status": 400})
+
+        print("texst3")
 
     except Exception as e:
         print(e)
