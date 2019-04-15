@@ -32,7 +32,7 @@ def adminLogin(request):
                 "isAdmin": user.is_superuser
             }
             hashed_email = make_password(user.official_email_id, salt=None)
-            print(hashed_email)
+
         return Response(userObject, status=status.HTTP_200_OK)
     except Exception as e:
         return Response(data={"message": "You are not registered with us! :("}, status=status.HTTP_400_BAD_REQUEST)
