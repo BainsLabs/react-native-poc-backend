@@ -29,24 +29,22 @@ def index(request):
         # make a list of all the available images
 
         images = skimage.io.imread(user.image_url)
-        # print("ima", images)
-        cam = cv2.VideoCapture(0)   # 0 -> index of camera
-        s, img = cam.read()
-        if s:    # frame captured without any errors
-            cv2.namedWindow("cam-test")
-            cv2.imshow("cam-test", img)
-            # cv2.waitKey(0)
-            cv2.destroyWindow("cam-test")
-            cv2.imwrite("filename.jpg", img)
+        # cam = cv2.VideoCapture(0)   # 0 -> index of camera
+        # s, img = cam.read()
+        # if s:    # frame captured without any errors
+        #     cv2.namedWindow("cam-test")
+        #     cv2.imshow("cam-test", img)
+        #     # cv2.waitKey(0)
+        #     cv2.destroyWindow("cam-test")
+        #     cv2.imwrite("filename.jpg", img)
 
         # load your image
-        # image = face_recognition.load_image_file(
-        #     io.BytesIO(base64.b64decode(request.data["img_base"])))
+        image = face_recognition.load_image_file(io.BytesIO(base64.b64decode(request.data["img_base"])))
 
-        image = face_recognition.load_image_file("filename.jpg")
+        # image = face_recognition.load_image_file("filename.jpg")
 
         # encoded the loaded image into a feature vector
-        image_to_be_matched_encoded = face_recognition.face_encodings(image)
+        image_to_be_matched_encoded = face_recognition.face_encodings(image)[0]
 
         current_image = images
         # encode the loaded image into a feature vector
@@ -57,14 +55,14 @@ def index(request):
         result = face_recognition.compare_faces(
             [image_to_be_matched_encoded], current_image_encoded)
     # check if it was a match
-        print("texst2", result)
-        result = np.array(result)
-        if result.any():
-            return Response(data={"status": 200})
-        else:
-            return Response(data={"status": 400})
+        # print("texst2", result)
 
-        print("texst3")
+        if result[0]:
+            return Response(data={"status": 200,"message":"Matched"},status=status.HTTP_200_OK)
+        else:
+            return Response(data={"status": 400,"message":"Not Matched"},status=status.HTTP_400_BAD_REQUEST)
+
+
 
     except Exception as e:
         print(e)
