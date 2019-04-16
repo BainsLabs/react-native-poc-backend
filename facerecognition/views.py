@@ -12,6 +12,7 @@ import io
 import skimage
 from rest_framework.parsers import JSONParser
 from facerecognition.models import User
+from employee.models import EmployeeDetails
 import json
 import base64
 
@@ -67,3 +68,24 @@ def index(request):
     except Exception as e:
         print(e)
         return Response(data={"message": "not found"}, status=status.HTTP_404_NOT_FOUND)
+
+@api_view(["POST"])
+def userExist(request):
+    try:
+        user = User.objects.get(official_email_id=request.data['email'])
+
+        if user:
+            return Response(status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(["POST"])
+def employeDetail(request):
+    try:
+        user= User.objects.get(official_email_id=request.data['email'])
+        if user.official_email_id:
+            emplpoyee = EmployeeDetails.objects.get(official_email=request.data['email'])
+            return Response(data={"employee":emplpoyee.to_json,"image":user.image_url}, status=status.HTTP_200_OK)
+            print(user.official_email_id)
+    except Exception as e:
+        return Response(data={"message":"No Employee Found"},status=status.HTTP_404_NOT_FOUND)
