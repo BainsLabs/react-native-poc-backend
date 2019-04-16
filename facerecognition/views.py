@@ -85,9 +85,10 @@ def userExist(request):
 def employeDetail(request):
     try:
         user= User.objects.get(official_email_id=request.data['email'])
-        if user.official_email_id:
-            emplpoyee = EmployeeDetails.objects.get(official_email=request.data['email'])
+        if user.is_superuser:
+          emplpoyee = EmployeeDetails.objects.get(official_email=request.data['email'])
             return Response(data={"employee":emplpoyee.to_json,"user":user.to_json}, status=status.HTTP_200_OK)
-            print(user.official_email_id)
+        else:
+            return Response(data={"message":"You are not Authorized for this view"}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response(data={"message":"No Employee Found"},status=status.HTTP_404_NOT_FOUND)
