@@ -57,9 +57,10 @@ def index(request):
             [image_to_be_matched_encoded], current_image_encoded)
     # check if it was a match
         # print("texst2", result)
+        emplpoyee = EmployeeDetails.objects.get(official_email=request.data['email'])
 
         if result[0]:
-            return Response(data={"status": 200,"message":"Matched"},status=status.HTTP_200_OK)
+            return Response(data={"status": 200,"employee_profile":emplpoyee.to_json,"user":user.to_json},status=status.HTTP_200_OK)
         else:
             return Response(data={"status": 400,"message":"Not Matched"},status=status.HTTP_400_BAD_REQUEST)
 
@@ -72,12 +73,13 @@ def index(request):
 @api_view(["POST"])
 def userExist(request):
     try:
+        print(request.data['email'])
         user = User.objects.get(official_email_id=request.data['email'])
 
         if user:
-            return Response(status=status.HTTP_200_OK)
+            return Response(data={"status":200},status=status.HTTP_200_OK)
     except Exception as e:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(data={"status":404},status=status.HTTP_404_NOT_FOUND)
 
 @api_view(["POST"])
 def employeDetail(request):
@@ -85,7 +87,7 @@ def employeDetail(request):
         user= User.objects.get(official_email_id=request.data['email'])
         if user.official_email_id:
             emplpoyee = EmployeeDetails.objects.get(official_email=request.data['email'])
-            return Response(data={"employee":emplpoyee.to_json,"image":user.image_url}, status=status.HTTP_200_OK)
+            return Response(data={"employee":emplpoyee.to_json,"user":user.to_json}, status=status.HTTP_200_OK)
             print(user.official_email_id)
     except Exception as e:
         return Response(data={"message":"No Employee Found"},status=status.HTTP_404_NOT_FOUND)
