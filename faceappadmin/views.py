@@ -27,12 +27,13 @@ def adminLogin(request):
 
         if user_Data:
             user = User.objects.get(official_email_id=email)
+            hashed_email = make_password(user.official_email_id, salt=None)
             userObject = {
                 "email": user.official_email_id,
-                "isAdmin": user.is_superuser
+                "isAdmin": user.is_superuser,
+                "hash": hashed_email
             }
-            hashed_email = make_password(user.official_email_id, salt=None)
 
-        return Response(userObject, status=status.HTTP_200_OK)
+        return Response(data={"user":userObject}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response(data={"message": "You are not registered with us! :("}, status=status.HTTP_400_BAD_REQUEST)

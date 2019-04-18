@@ -38,10 +38,10 @@ def newEmployee(request):
         print(e)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": e})
 
-@api_view(["GET"])
+@api_view(["POST"])
 def allEmployeeList(request):
     try:
-        is_superuser = request.GET['is_superuser',False]
+        is_superuser = request.data['is_admin']
         employees = EmployeeDetails.objects.all()
         if is_superuser:
             return Response(data={"employeeslist":employees.to_json},status=status.HTTP_200_OK)
