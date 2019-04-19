@@ -6,16 +6,29 @@ from rest_framework.decorators import api_view
 from employee.models import EmployeeDetails
 from facerecognition.models import User
 import json
+from rest_framework.exceptions import APIException
+
 # Create your views here.
 
 
-@api_view(["GET"])
+@api_view(["POST"])
 def employeeList(request):
     try:
-        employees = EmployeeDetails.objects.all()
-        return Response(data=[employee.to_json for employee in employees], status=status.HTTP_200_OK)
+        is_superuser = request.data['is_admin']
+        employees = EmployeeDetails.objects.all().values("official_email","employee_id","p_address","c_address")
+        employeeList = list(employees)
+        # userdetails = []
+        for employee in employees:
+            # print(employee)
+            user = User.objects.get(official_email_id=employee['official_email'])
+            username = user.name
+            employee['name'] =username
+        if is_superuser:
+            # print("testing")
+            return Response(employeeList,status=status.HTTP_200_OK)
     except Exception as e:
-        return Response(data={"message": "No Data Found"}, status=status.HTTP_400_BAD_REQUEST)
+        print(e)
+        return Response(data={"message":"Error Occured"},status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
@@ -23,7 +36,7 @@ def adminLogin(request):
     try:
         email = request.data["email"]
         password = request.data["password"]
-        user_Data = User(official_email_id=email, password=password)
+        user_Data = User.objects.get(official_email_id=email, password=password)
 
         if user_Data:
             user = User.objects.get(official_email_id=email)
@@ -34,6 +47,6 @@ def adminLogin(request):
                 "hash": hashed_email
             }
 
-        return Response(data={"user":userObject}, status=status.HTTP_200_OK)
+        return Response(data={"user":userObject,"status":status.HTTP_200_OK}, status=status.HTTP_200_OK)
     except Exception as e:
-        return Response(data={"message": "You are not registered with us! :("}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data={"message": "You are not registered with us! :(","status":status.HTTP_401_UNAUTHORIZED}, status=status.HTTP_401_UNAUTHORIZED)

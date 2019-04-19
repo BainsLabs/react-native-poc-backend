@@ -38,12 +38,3 @@ def newEmployee(request):
         print(e)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": e})
 
-@api_view(["POST"])
-def allEmployeeList(request):
-    try:
-        is_superuser = request.data['is_admin']
-        employees = EmployeeDetails.objects.all()
-        if is_superuser:
-            return Response(data={"employeeslist":employees.to_json},status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response(data={"message":"Error Occured"},status=status.HTTP_400_BAD_REQUEST)

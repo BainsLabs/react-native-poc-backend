@@ -18,4 +18,4 @@ class User(models.Model):
 
     @property
     def to_json(self):
-        return {"official_email_id": self.official_email_id,"image_url":self.image_url,"name":self.name}
+        return {"official_email_id": self.official_email_id, "image_url": self.image_url, "name": self.name}
