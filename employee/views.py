@@ -6,6 +6,7 @@ from employee.models import EmployeeDetails
 from facerecognition.models import User
 from utils.imageUpload import imageUpload
 from django.core.files.storage import FileSystemStorage
+from rest_framework.parsers import MultiPartParser, FormParser
 import os
 
 # Create your views here.
@@ -13,7 +14,9 @@ import os
 
 @api_view(["GET", "POST"])
 def newEmployee(request):
+    parser_classes = (MultiPartParser, FormParser)
     try:
+        print(request.data)
         fs = FileSystemStorage()
         official_email = request.data['official_email']
         personal_email = request.data['personal_email']
@@ -21,6 +24,7 @@ def newEmployee(request):
         p_address = request.data['p_address']
         c_address = request.data['c_address']
         img = request.FILES['user_image']
+        print(img)
         imagename = fs.save(img.name,img)
         uploaded_image = fs.url(imagename)
         name = request.data['name']
@@ -33,8 +37,8 @@ def newEmployee(request):
                     name=name, image_url=image_url)
         employee.save()
         user.save()
-        return Response(status=status.HTTP_200_OK, data={"message": "employee created"})
+        return Response(data={"message": "Employee created"},status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={"message": e})
+        return Response(data={"message": "Not Save"},status=status.HTTP_400_BAD_REQUEST)
 

@@ -7,7 +7,7 @@ class EmployeeDetails(models.Model):
     official_email = models.EmailField(
         ('email address'), unique=True, blank=False)
     personal_email = models.EmailField(
-        ('email address'), unique=True, blank=True)
+        ('email address'), blank=True)
     employee_id = models.CharField(max_length=100, null=False, blank=False)
     p_address = models.CharField(max_length=200, null=False, blank=False)
     c_address = models.CharField(max_length=200, blank=True)
