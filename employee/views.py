@@ -14,9 +14,10 @@ import os
 
 @api_view(["GET", "POST"])
 def newEmployee(request):
-    parser_classes = (MultiPartParser, FormParser)
+    parser_classes = (MultiPartParser, FormParser,)
     try:
         print(request.data)
+        # print(request.data)
         fs = FileSystemStorage()
         official_email = request.data['official_email']
         personal_email = request.data['personal_email']
@@ -24,7 +25,6 @@ def newEmployee(request):
         p_address = request.data['p_address']
         c_address = request.data['c_address']
         img = request.FILES['user_image']
-        print(img)
         imagename = fs.save(img.name,img)
         uploaded_image = fs.url(imagename)
         name = request.data['name']
@@ -39,6 +39,6 @@ def newEmployee(request):
         user.save()
         return Response(data={"message": "Employee created"},status=status.HTTP_200_OK)
     except Exception as e:
-        print(e)
+        # print(e)
         return Response(data={"message": "Not Save"},status=status.HTTP_400_BAD_REQUEST)
 
