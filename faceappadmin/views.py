@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.decorators import api_view
 from employee.models import EmployeeDetails
 from facerecognition.models import User
+from employeetimings.models import Employeetime
 import json
 from rest_framework.exceptions import APIException
 
@@ -21,11 +22,13 @@ def employeeList(request):
         for employee in employees:
             # print(employee)
             user = User.objects.get(official_email_id=employee['official_email'])
+            timings = Employeetime.objects.get(employee_email=employee['official_email'])
             username = user.name
             employee['name'] =username
+            employee['timings'] = timings.to_json
         if is_superuser:
             # print("testing")
-            return Response(employeeList,status=status.HTTP_200_OK)
+            return Response(data={"employeelist":employeeList},status=status.HTTP_200_OK)
     except Exception as e:
         print(e)
         return Response(data={"message":"Error Occured"},status=status.HTTP_400_BAD_REQUEST)

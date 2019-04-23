@@ -67,8 +67,6 @@ def index(request):
                 emp = EmployeeDetails.objects.get(official_email=user.official_email_id)
                 usertimings = Employeetime.objects.filter(employee_email=emp.official_email,current_day=now.day)
                 usertimings = usertimings.first()
-                print(literal_eval(usertimings.employee_break_out_time))
-                print(usertimings)
                 if not usertimings:
                     now = datetime.datetime.now()
                     EmployeeTimings = Employeetime(employee_id=emp.employee_id,employee_email=emp.official_email,employee_login_time=datetime.datetime.now(tz=timezone.utc),current_date=datetime.date.today(), current_day=now.day)
@@ -96,7 +94,8 @@ def index(request):
                     break_in_timings = []
                         # break_in_timings['timings'] = current_time
                     if usertimings.employee_break_in_time is None:
-                        print(usertimings.employee_break_in_time, "testing")
+                        print(current_time, "testing")
+
                         break_in_timings.append(current_time)
                     else:
 
