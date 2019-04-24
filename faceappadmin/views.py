@@ -22,10 +22,9 @@ def employeeList(request):
         for employee in employees:
             # print(employee)
             user = User.objects.get(official_email_id=employee['official_email'])
-            timings = Employeetime.objects.get(employee_email=employee['official_email'])
             username = user.name
             employee['name'] =username
-            employee['timings'] = timings.to_json
+            # employee['timings'] = timings.to_json
         if is_superuser:
             # print("testing")
             return Response(data={"employeelist":employeeList},status=status.HTTP_200_OK)
