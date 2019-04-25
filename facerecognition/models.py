@@ -19,3 +19,7 @@ class User(models.Model):
     @property
     def to_json(self):
         return {"id":self.id,"official_email_id": self.official_email_id, "image_url": self.image_url, "name": self.name}
+    def save(self, *args, **kwargs):
+        if self.official_email_id:
+            self.official_email_id = self.official_email_id.strip().lower()
+        super(User, self).save(*args, **kwargs)

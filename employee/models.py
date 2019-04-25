@@ -18,3 +18,7 @@ class EmployeeDetails(models.Model):
     @property
     def to_json(self):
         return {"official_email": self.official_email, "employee_id": self.employee_id, "p_address": self.p_address, "c_address": self.c_address}
+    def save(self, *args, **kwargs):
+        if self.official_email:
+            self.official_email = self.official_email.strip().lower()
+        super(EmployeeDetails, self).save(*args, **kwargs)

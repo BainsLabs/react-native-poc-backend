@@ -70,6 +70,7 @@ def index(request):
                     EmployeeTimings.save()
                     return Response(data={"status": 200,"employee_profile":emp.to_json,"user":user.to_json,"login_time":usertimings.employee_login_time,"break_out_time":time},status=status.HTTP_200_OK)
                 else:
+                    print("failing punch in")
                     return Response(data={"message":"Nothing Found"},status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         print(e)
@@ -91,7 +92,7 @@ def employeDetail(request):
 def employeeTimings(request):
     try:
         if request.data['is_superuser']:
-          emplpoyeetime = Employeetime.objects.filter(employee_email=request.data['email']).values("employee_email", "employee_login_time", "employee_logout_time","employee_break_in_time", "employee_break_out_time","break_reason","current_date")
+          emplpoyeetime = Employeetime.objects.filter(employee_email=request.data['email']).values("id","employee_email", "employee_login_time", "employee_logout_time","employee_break_in_time", "employee_break_out_time","break_reason","current_date")
           timings = list(emplpoyeetime)
           return Response(data={"employee_time":timings}, status=status.HTTP_200_OK)
         else:
