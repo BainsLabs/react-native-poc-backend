@@ -99,3 +99,24 @@ def employeeTimings(request):
     except Exception as e:
         print(e)
         return Response(data={"status":status.HTTP_404_NOT_FOUND,"message":"No timing Avalibale in Database for this User"},status=status.HTTP_404_NOT_FOUND)
+
+@api_view(["GET"])
+def updateLogoutTime(request):
+    try:
+        now = datetime.datetime.now()
+        employees = User.objects.all()
+        if employees is not None:
+            for employee in employees:
+                employeetime = Employeetime.objects.filter(employee_email=employee.official_email_id,current_day=now.day)
+                lastindex = employeetime.last()
+                for time in employeetime:
+                    if time.employee_break_out_time != "":
+                        employeetime.update(employee_logout_time=time.employee_break_out_time)
+                        return Response(data={"message":"Logout Time Successfully Updated"},status=status.HTTP_200_OK)
+                    else:
+                        return Response(data={"message":"Breakout Time is empty"},status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(data={"message":"No Login Entery For Today"},status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        print(e)
+        return Response(data={"message":"Error Occured"},status=status.HTTP_400_BAD_REQUEST)
